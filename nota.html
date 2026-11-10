@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para mi chinita 💌</title>
+    <link rel="stylesheet" href="estilosnota.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="corazones" id="corazones"></div>
+
+    <a href="index.html" class="volver">← Volver</a>
+
+    <div class="reproductor" id="reproductor">
+    <div class="rp-fila">
+        <div class="rp-disco"><span>🎵</span></div>
+
+        <div class="rp-textos">
+            <p class="reproductor-titulo">Stand By Me</p>
+            <p class="reproductor-subtitulo">
+            </p>
+        </div>
+
+        <div class="rp-ondas">
+            <span></span><span></span><span></span><span></span>
+        </div>
+
+        <button class="rp-play" id="rpPlay" aria-label="Reproducir o pausar">▶</button>
+    </div>
+
+    <div class="rp-barra">
+        <span id="rpActual">0:00</span>
+        <input type="range" id="rpProgreso" min="0" max="100" value="0" step="0.1">
+        <span id="rpTotal">0:00</span>
+    </div>
+
+    <audio id="rpAudio" preload="metadata">
+        <source src="standbyme.mp3" type="audio/mpeg">
+    </audio>
+</div>
+
+    <main class="carta-papel">
+        <div class="sello">💖</div>
+
+        <p class="nota-saludo">Mi chinita,</p>
+
+        <p>
+            Hmmm, no sé cómo empezar esto. La verdad no soy de hacer esto, pero en serio me tienes muy enamorado,
+            que esto no es nada de cómo puedo llegar a demostrar lo que siento por ti y lo mucho que te quiero.
+            Eres todo lo que quiero en este mundo, ya no me imagino una vida donde tú no estés presente,
+            me da miedo el hecho de que un día ya no decidas mirarme; créeme que no soportaría que ya no seas
+            parte de mi vida.
+        </p>
+
+        <p>
+            Me encanta estar contigo, me encanta hablar contigo, me encanta tu voz, me encanta tu risa, me encantan
+            tus ojitos, me encanta tu boca, me encanta tu nariz, me encantan tus orejitas, me encantan tus pestañas,
+            me encantan tus cejas, me encanta tu cuerpo, me encanta tu forma de ser, me encantan tus chistes,
+            me encanta tu inteligencia, me encanta cómo piensas, me encanta lo creativa que puedes llegar a ser,
+            me encanta cómo se te forman los hoyuelos cuando sonríes, me encanta cómo me miras,
+            me encanta cuando te veo distraída, me encanta cuando te acomodas el cabello, me encanta que me des paz,
+            me encanta cómo me haces sentir cuando estoy contigo, me encanta que seas mi lugar seguro,
+            me encanta lo fuerte que eres, me encanta tu locura y cómo puedes llegar a alegrarme;
+            simplemente me encanta todo, todo de ti.
+        </p>
+
+        <p>
+            Eres mi persona favorita, eres esa persona que puede convertir un día malo en un día bueno, mi lugar seguro
+            donde siempre quiero volver. Me encanta cuando estoy en tus brazos, cuando tengo la oportunidad de besarte
+            y saber que eres todo lo que me hace feliz. Siempre serás mi lugar favorito en este universo, ya que
+            disfruto estar a tu lado; es el único momento donde no me importa lo que esté pasando en el mundo.
+        </p>
+
+        <p>
+            Gracias por responder ese mensaje y hacerme partícipe de tu vida, por dejarme conocerte más, por conocer a
+            la gran y maravillosa chica que eres. Quiero cuidarte, apoyarte en cada uno de tus sueños y hacerte sonreír
+            todos los días mientras Dios y la vida me lo permitan. Pase lo que pase, quiero seguir estando a tu lado.
+            Te adoro con todo mi corazón, mi chinita hermosa, y prometo recordártelo siempre, aunque a veces me cueste
+            encontrar las palabras exactas para decirte cuánto significas para mí.
+        </p>
+
+        <p class="nota-despedida">
+            Te quiero muchísimo
+            <br>
+            <span class="nota-firma">— Tu Gordi</span>
+        </p>
+    </main>
+
+        <script>
+        const contenedor = document.getElementById('corazones');
+        const emojis = ['💖', '💗', '💜', '💕', '🌸'];
+
+        for (let i = 0; i < 18; i++) {
+            const c = document.createElement('span');
+            c.className = 'corazon';
+            c.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+            c.style.left = Math.random() * 100 + '%';
+            c.style.fontSize = (14 + Math.random() * 22) + 'px';
+            c.style.animationDuration = (8 + Math.random() * 10) + 's';
+            c.style.animationDelay = (Math.random() * 10) + 's';
+            contenedor.appendChild(c);
+        }
+    </script>
+
+    <script>
+    (function () {
+        const audio = document.getElementById('rpAudio');
+        const btn = document.getElementById('rpPlay');
+        const barra = document.getElementById('rpProgreso');
+        const actual = document.getElementById('rpActual');
+        const total = document.getElementById('rpTotal');
+        const caja = document.getElementById('reproductor');
+
+        function fmt(s) {
+            if (!isFinite(s)) return '0:00';
+            const m = Math.floor(s / 60);
+            const r = Math.floor(s % 60).toString().padStart(2, '0');
+            return m + ':' + r;
+        }
+
+        function mostrarDuracion() {
+            total.textContent = fmt(audio.duration);
+        }
+
+        if (audio.readyState >= 1) mostrarDuracion();
+        audio.addEventListener('loadedmetadata', mostrarDuracion);
+
+        btn.addEventListener('click', function () {
+            if (audio.paused) {
+                audio.play().catch(function (e) { console.log('Error de audio:', e); });
+            } else {
+                audio.pause();
+            }
+        });
+
+        audio.addEventListener('play', function () {
+            caja.classList.add('sonando');
+            btn.textContent = '❚❚';
+        });
+
+        audio.addEventListener('pause', function () {
+            caja.classList.remove('sonando');
+            btn.textContent = '▶';
+        });
+
+        audio.addEventListener('ended', function () {
+            caja.classList.remove('sonando');
+            btn.textContent = '▶';
+        });
+
+        audio.addEventListener('timeupdate', function () {
+            if (!audio.duration) return;
+            const p = (audio.currentTime / audio.duration) * 100;
+            barra.value = p;
+            barra.style.setProperty('--progreso', p + '%');
+            actual.textContent = fmt(audio.currentTime);
+        });
+
+        barra.addEventListener('input', function () {
+            if (!audio.duration) return;
+            audio.currentTime = (barra.value / 100) * audio.duration;
+        });
+    })();
+    </script>
+</body>
+</html>

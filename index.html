@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para mi chinita 💖</title>
+    <link rel="stylesheet" href="estilos.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <a href="nota.html" target="_blank"></a>
+</head>
+<body>
+    <div class="corazones" id="corazones"></div>
+
+    <div class="reproductor" id="reproductor">
+        <div class="rp-fila">
+            <div class="rp-disco"><span>🎵</span></div>
+
+            <div class="rp-textos">
+                <p class="reproductor-titulo">Pretty Boy</p>
+                <p class="reproductor-subtitulo"></p>
+            </div>
+
+            <div class="rp-ondas">
+                <span></span><span></span><span></span><span></span>
+            </div>
+
+            <button class="rp-play" id="rpPlay" aria-label="Reproducir o pausar">▶</button>
+        </div>
+
+        <div class="rp-barra">
+            <span id="rpActual">0:00</span>
+            <input type="range" id="rpProgreso" min="0" max="100" value="0" step="0.1">
+            <span id="rpTotal">0:00</span>
+        </div>
+
+        <audio id="rpAudio" preload="metadata">
+            <source src="pretty-boy.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+        <div class="tarjeta-principal">
+        <h1 class="titulo"> MI CHINITAAA ❤️</h1>
+        <p class="subtitulo"></p>
+
+        <div class="caja-frase">
+            <p id="texto-frase">"Eres mi persona favorita del mundo."</p>
+        </div>
+        <button class="btn-frase" onclick="siguienteFrase()">Ver otra frase</button>
+
+               <div class="carta" id="carta">
+            <a href="nota.html">
+                <h3>Haz clic para abrir tu nota 💌</h3>
+            </a>
+        </div>
+
+        <p class="mensaje-oculto">
+            Gracias por estar siempre conmigo, por sacarme una sonrisa incluso en los momentos difíciles y por hacer mi vida más bonita. ¡Te amo muchísimo!
+        </p>
+    </div>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="script.js"></script>
+
+    <script>
+        // ---------- Frases ----------
+const frases = [
+    "Eres mi persona favorita del mundo.",
+    "Contigo hasta los días más normales se sienten especiales.",
+    "Eres mi lugar seguro, donde siempre quiero volver.",
+    "Cada día a tu lado es mi momento favorito.",
+    "Te quiero más de lo que las palabras y mis acciones puedan decir."
+];
+
+let indiceFrase = 0;
+
+function siguienteFrase() {
+    const texto = document.getElementById('texto-frase');
+
+    texto.style.opacity = 0;
+
+    setTimeout(function () {
+        indiceFrase = (indiceFrase + 1) % frases.length;
+        texto.textContent = '"' + frases[indiceFrase] + '"';
+        texto.style.opacity = 1;
+    }, 300);
+}
+(function () {
+    const audio = document.getElementById('rpAudio');
+    const btn = document.getElementById('rpPlay');
+    const barra = document.getElementById('rpProgreso');
+    const actual = document.getElementById('rpActual');
+    const total = document.getElementById('rpTotal');
+    const caja = document.getElementById('reproductor');
+
+    function fmt(s) {
+        if (!isFinite(s)) return '0:00';
+        const m = Math.floor(s / 60);
+        const r = Math.floor(s % 60).toString().padStart(2, '0');
+        return m + ':' + r;
+    }
+
+    function mostrarDuracion() {
+        total.textContent = fmt(audio.duration);
+    }
+
+    if (audio.readyState >= 1) mostrarDuracion();
+    audio.addEventListener('loadedmetadata', mostrarDuracion);
+
+    btn.addEventListener('click', function () {
+        if (audio.paused) {
+            audio.play().catch(function (e) { console.log('Error de audio:', e); });
+        } else {
+            audio.pause();
+        }
+    });
+
+    audio.addEventListener('play', function () {
+        caja.classList.add('sonando');
+        btn.textContent = '❚❚';
+    });
+
+    audio.addEventListener('pause', function () {
+        caja.classList.remove('sonando');
+        btn.textContent = '▶';
+    });
+
+    audio.addEventListener('ended', function () {
+        caja.classList.remove('sonando');
+        btn.textContent = '▶';
+    });
+
+    audio.addEventListener('timeupdate', function () {
+        if (!audio.duration) return;
+        const p = (audio.currentTime / audio.duration) * 100;
+        barra.value = p;
+        barra.style.setProperty('--progreso', p + '%');
+        actual.textContent = fmt(audio.currentTime);
+    });
+
+    barra.addEventListener('input', function () {
+        if (!audio.duration) return;
+        audio.currentTime = (barra.value / 100) * audio.duration;
+    });
+})();
+</script>
+</body>
+</html>
